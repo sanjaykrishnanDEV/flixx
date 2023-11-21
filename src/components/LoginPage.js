@@ -1,12 +1,26 @@
-import React from "react";
+import React, { useRef } from "react";
 import Header from "./Header";
 import { BG_URL } from "../utils/constants";
 import { useState } from "react";
+import { checkValidData } from "../utils/Validate";
 const LoginPage = () => {
+  //   useref for email password
+  const email = useRef(null);
+  const password = useRef(null);
   const [isSigninForm, setisSigninForm] = useState(true);
+  const [errMessage, seterrMessage] = useState("");
   const toggleSignInForm = () => {
     setisSigninForm(() => !isSigninForm);
   };
+  const handlevalidation = (e) => {
+    e.preventDefault();
+    const message = checkValidData(email.current.value, password.current.value);
+    console.log(email.current.value);
+    console.log(password.current.value);
+    console.log(message);
+    seterrMessage(message);
+  };
+
   return (
     <div className=" h-screen w-screen ">
       <div className="absolute top-3 mx-3 brightness-100 z-10 text-red-500 text-4xl font-bold">
@@ -20,6 +34,7 @@ const LoginPage = () => {
         />
       </div>
       <form
+        onSubmit={(e) => e.preventDefault()}
         className="text-white absolute  w-1/3 h-fit p-12 m-auto left-0 right-0 top-0 bottom-0 flex flex-col
          justify-center items-center bg-black bg-opacity-80 rounded-md"
       >
@@ -43,20 +58,27 @@ const LoginPage = () => {
           />
         )}
         <input
+          ref={email}
           type="text"
-          placeholder="Email or phone number 
+          placeholder="Email Id
 "
           className="w-full p-2 rounded-md  m-2 text-black"
         />
         <input
+          ref={password}
           type="text"
           placeholder="Password
 "
           className="p-2 m-3 rounded-md w-full text-black"
         />
-        <button className=" bg-red-600 text-white w-full px-12 rounded-md py-2 ">
-          {isSigninForm ? "Sign In" : "Sign Up"}
+        <button
+          onClick={handlevalidation}
+          className=" bg-red-600 text-white w-full px-12 rounded-md py-2 "
+        >
+          {isSigninForm ? "Sign In ❤" : "Sign Up"}
         </button>
+        {/* erroemessage */}
+        <p className=" text-red-600">{errMessage}</p>
         <div className="flex my-4">
           <p className="mx-2 text-slate-400">
             {isSigninForm ? "New to Netflix?" : "Already Have an account!"}
