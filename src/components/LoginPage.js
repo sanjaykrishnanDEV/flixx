@@ -5,6 +5,7 @@ import { useState } from "react";
 import { checkValidData } from "../utils/Validate";
 import { auth } from "../utils/firebase";
 import { ToastContainer, toast } from "react-toastify";
+import {  useNavigate } from "react-router-dom";
 
 //firebase
 import {
@@ -15,6 +16,10 @@ import {
 //firebase
 
 const LoginPage = () => {
+  //navigate
+  
+const navigate = useNavigate();
+  //navigate
   //   useref for email password name
   const userName = useRef(null);
   const email = useRef(null);
@@ -41,6 +46,8 @@ const LoginPage = () => {
           .then((usercredentials) => {
             const user = usercredentials.user;
             console.log("success");
+            navigate("/browse");
+
           })
           .catch((err) => {
             console.log(err);
@@ -58,6 +65,8 @@ const LoginPage = () => {
             const user = userCredential.user;
             // ...
             console.log("success");
+            navigate("/browse");
+
           })
           .catch((error) => {
             const errorCode = error.code;
