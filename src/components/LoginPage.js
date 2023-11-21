@@ -3,10 +3,23 @@ import Header from "./Header";
 import { BG_URL } from "../utils/constants";
 import { useState } from "react";
 import { checkValidData } from "../utils/Validate";
+import { auth } from "../utils/firebase";
+import { ToastContainer, toast } from "react-toastify";
+
+//firebase
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+
+//firebase
+
 const LoginPage = () => {
-  //   useref for email password
+  //   useref for email password name
+  const userName = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
+  const mobileNumber = useRef(null);
   const [isSigninForm, setisSigninForm] = useState(true);
   const [errMessage, seterrMessage] = useState("");
   const toggleSignInForm = () => {
@@ -15,12 +28,50 @@ const LoginPage = () => {
   const handlevalidation = (e) => {
     e.preventDefault();
     const message = checkValidData(email.current.value, password.current.value);
-    console.log(email.current.value);
-    console.log(password.current.value);
-    console.log(message);
     seterrMessage(message);
+    //firebase auth because valid credentials client-side
+    if (message === null) {
+      if (!isSigninForm) {
+        //signupform
+        createUserWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        )
+          .then((usercredentials) => {
+            const user = usercredentials.user;
+            console.log("success");
+          })
+          .catch((err) => {
+            console.log(err);
+            seterrMessage(err.message);
+          });
+      } else {
+        //signin form logic
+        signInWithEmailAndPassword(
+          auth,
+          email.current.value,
+          password.current.value
+        )
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            // ...
+            console.log("success");
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            seterrMessage(errorCode + "-" + errorMessage);
+          });
+        
+      }
+    }
+    //some error in authentication so return nowhere
+    else {
+      return;
+    }
   };
-
   return (
     <div className=" h-screen w-screen ">
       <div className="absolute top-3 mx-3 brightness-100 z-10 text-red-500 text-4xl font-bold">
@@ -38,11 +89,13 @@ const LoginPage = () => {
         className="text-white absolute  w-1/3 h-fit p-12 m-auto left-0 right-0 top-0 bottom-0 flex flex-col
          justify-center items-center bg-black bg-opacity-80 rounded-md"
       >
+        
         <label className="text-2xl">
           {isSigninForm ? "Sign In" : "Sign Up"}
         </label>
         {!isSigninForm && (
           <input
+            ref={userName}
             type="text"
             placeholder="Full name 
 "
@@ -51,6 +104,7 @@ const LoginPage = () => {
         )}
         {!isSigninForm && (
           <input
+            ref={mobileNumber}
             type="number"
             placeholder="Mobile number 
 "
@@ -77,7 +131,6 @@ const LoginPage = () => {
         >
           {isSigninForm ? "Sign In ❤" : "Sign Up"}
         </button>
-        {/* erroemessage */}
         <p className=" text-red-600">{errMessage}</p>
         <div className="flex my-4">
           <p className="mx-2 text-slate-400">
@@ -92,6 +145,7 @@ const LoginPage = () => {
           Learn more.
         </p>
       </form>
+      
     </div>
   );
 };
