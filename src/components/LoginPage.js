@@ -4,9 +4,10 @@ import { BG_URL } from "../utils/constants";
 import { useState } from "react";
 import { checkValidData } from "../utils/Validate";
 import { auth } from "../utils/firebase";
-import { ToastContainer, toast } from "react-toastify";
-import {  useNavigate } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
+import { updateProfile } from "firebase/auth";
+import { addUser } from "../utils/userSlice";
+import { useDispatch } from "react-redux";
 //firebase
 import {
   createUserWithEmailAndPassword,
@@ -17,8 +18,9 @@ import {
 
 const LoginPage = () => {
   //navigate
-  
-const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
   //navigate
   //   useref for email password name
   const userName = useRef(null);
@@ -45,9 +47,23 @@ const navigate = useNavigate();
         )
           .then((usercredentials) => {
             const user = usercredentials.user;
-            console.log("success");
-            navigate("/browse");
+            updateProfile(user, {
+              displayName: userName.current.value,
+              photoURL: "https://example.com/jane-q-user/profile.jpg",
+            })
+              .then(() => {
+                const { uid, email, displayName } = auth.currentUser;
+                dispatch(
+                  addUser({ uid: uid, email: email, displayName: displayName })
+                );
+                navigate("/browse");
+              })
+              .catch((error) => {
+                console.log(error.message);
+                seterrMessage(error.message);
+              });
 
+            console.log("success");
           })
           .catch((err) => {
             console.log(err);
@@ -66,14 +82,12 @@ const navigate = useNavigate();
             // ...
             console.log("success");
             navigate("/browse");
-
           })
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
             seterrMessage(errorCode + "-" + errorMessage);
           });
-        
       }
     }
     //some error in authentication so return nowhere
@@ -98,7 +112,6 @@ const navigate = useNavigate();
         className="text-white absolute  w-1/3 h-fit p-12 m-auto left-0 right-0 top-0 bottom-0 flex flex-col
          justify-center items-center bg-black bg-opacity-80 rounded-md"
       >
-        
         <label className="text-2xl">
           {isSigninForm ? "Sign In" : "Sign Up"}
         </label>
@@ -154,7 +167,6 @@ const navigate = useNavigate();
           Learn more.
         </p>
       </form>
-      
     </div>
   );
 };
