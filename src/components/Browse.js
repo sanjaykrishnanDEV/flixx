@@ -3,9 +3,12 @@ import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import useNowPlaying from "../customHooks/useNowplaying";
 import Maincontainer from "./Maincontainer";
 import Secondarycontainer from "./SecondaryContainer";
+import useTopRatedMovieFetcher from "../customHooks/useTopRatedFetcher";
+import useAddUpcomingMovie from "../customHooks/useAddUpcomingMovie";
+import useNowPlaying from "../customHooks/useNowplaying";
+import usePopularMoviesFetcher from "../customHooks/usePopularMoviesFetcher";
 const Browse = () => {
   const navigate = useNavigate();
   function handleSignOut() {
@@ -17,6 +20,9 @@ const Browse = () => {
     navigate("/");
   }
   useNowPlaying();
+  usePopularMoviesFetcher();
+  useTopRatedMovieFetcher();
+  useAddUpcomingMovie();
   return (
     <div className="">
       <div

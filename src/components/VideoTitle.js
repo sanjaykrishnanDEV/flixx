@@ -5,7 +5,7 @@ const VideoTitle = ({ title, overview }) => {
   return (
     <div
       className="absolute z-10 flex h-screen  w-auto flex-col px-5 
-       place-content-end font-sans  text-white bg-gradient-to-r bg-black   
+       place-content-end  md:py-28 font-sans  text-white bg-gradient-to-r bg-black   
     bg-opacity-25"
     >
       <h1 className="text-5xl  md:w-1/4 p-3 font-bold">{title}</h1>
