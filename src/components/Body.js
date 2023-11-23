@@ -1,15 +1,13 @@
-import { useDispatch } from "react-redux";
-import React, { useEffect } from "react";
+import React from "react";
 import LoginPage from "./LoginPage";
 import Browse from "./Browse";
-import { createBrowserRouter, useNavigate } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
-import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../utils/firebase";
-import { addUser,removeUser } from "../utils/userSlice";
+
 
 const Body = () => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
+  // const navigate = useNavigate();
   const appRouter = createBrowserRouter([
     { path: "/", element: <LoginPage /> },
     {
@@ -17,19 +15,9 @@ const Body = () => {
       element: <Browse />,
     },
   ]);
-  useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        const {uid, email, displayName} = user;
-        dispatch(addUser({ uid: uid, email: email, displayName: displayName }));
-      } else {
-        dispatch(removeUser());
-        
-      }
-    });
-  }, []);
+ 
   return (
-    <div>
+    <div className="overflow-hidden">
       {/* <LoginPage />
       <Browse /> */}
       <RouterProvider router={appRouter} />

@@ -8,20 +8,14 @@ import { useNavigate } from "react-router-dom";
 import { updateProfile } from "firebase/auth";
 import { addUser } from "../utils/userSlice";
 import { useDispatch } from "react-redux";
-//firebase
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
 
-//firebase
-
 const LoginPage = () => {
-  //navigate
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
-  //navigate
   //   useref for email password name
   const userName = useRef(null);
   const email = useRef(null);
@@ -49,14 +43,12 @@ const LoginPage = () => {
             const user = usercredentials.user;
             updateProfile(user, {
               displayName: userName.current.value,
-              photoURL: "https://example.com/jane-q-user/profile.jpg",
             })
               .then(() => {
                 const { uid, email, displayName } = auth.currentUser;
                 dispatch(
                   addUser({ uid: uid, email: email, displayName: displayName })
                 );
-                navigate("/browse");
               })
               .catch((error) => {
                 console.log(error.message);
@@ -79,9 +71,6 @@ const LoginPage = () => {
           .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            // ...
-            console.log("success");
-            navigate("/browse");
           })
           .catch((error) => {
             const errorCode = error.code;
@@ -97,8 +86,9 @@ const LoginPage = () => {
   };
   return (
     <div className=" h-screen w-screen ">
+      <Header />
       <div className="absolute top-3 mx-3 brightness-100 z-10 text-red-500 text-4xl font-bold">
-        Ciniflixx
+        Cinify
       </div>
       <div className="absolute ">
         <img
