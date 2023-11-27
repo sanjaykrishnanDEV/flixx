@@ -4,6 +4,7 @@ import Browse from "./Browse";
 import { createBrowserRouter } from "react-router-dom";
 import { RouterProvider } from "react-router-dom";
 import MovieDetails from "./MovieDetails";
+import Profile from "./Profile";
 
 const Body = () => {
   // const dispatch = useDispatch();
@@ -18,6 +19,10 @@ const Body = () => {
       path: "/moviedetails/:movieId",
       element: <MovieDetails title="title"/>,
     },
+    {
+      path:"/profile/:uid",
+      element:<Profile/>
+    }
   ]);
 
   return (

@@ -48,6 +48,8 @@ const LoginPage = () => {
               email: email.current.value,
               password: password.current.value,
             });
+            localStorage.setItem("userId",user.uid);
+            localStorage.setItem("email",email.current.value);
           })
           .catch((err) => {
             console.log(err);
@@ -64,6 +66,8 @@ const LoginPage = () => {
           .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
+            localStorage.setItem("userId", user.uid);
+            localStorage.setItem("email",email.current.value);
           })
           .catch((error) => {
             const errorCode = error.code;

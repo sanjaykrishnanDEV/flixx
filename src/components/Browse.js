@@ -16,13 +16,21 @@ const Browse = () => {
   const stateValueofSearchBool = useSelector((store) => store.search.showState);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const userId = localStorage.getItem('userId');
+  //console.log(userId)
   function handleSignOut() {
     signOut(auth)
-      .then(() => {})
+      .then(() => {
+        localStorage.clear();
+      })
       .catch((error) => {
         navigate("/error");
       });
     navigate("/");
+  }
+
+  function handleProfile(){
+    navigate("/profile/"+userId)
   }
   function handleToggleSearch() {
     dispatch(toggleSearchView());
@@ -47,6 +55,8 @@ const Browse = () => {
           >
             {!stateValueofSearchBool?"Try Search":"Back to Home"}
           </button>
+          <button className="rounded-xl p-2 mx-2 bg-slate-200 " onClick={handleProfile}>
+            My profile</button>
           <button onClick={handleSignOut} className="bg-slate-200 text-black p-2 rounded-2xl me-5 right-0">
             Signout
           </button>
