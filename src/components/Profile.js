@@ -1,8 +1,9 @@
 import { auth, database } from "../utils/firebase";
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, remove } from "firebase/database";
 import { child, push, update } from "firebase/database";
+import { signOut } from "firebase/auth";
 
 const Profile = () => {
   const [showform, setshowform] = useState(false);
@@ -55,6 +56,25 @@ const Profile = () => {
       mobileNumber: "",
     });
     navigate("/browse");
+  }
+  function handledelete() {
+    remove(ref(db, "/userDetails/" + id.uid))
+      .then(() => {
+        alert("user deleted");
+      })
+      .then(()=>{
+        signOut(auth)
+      .then(() => {
+        localStorage.clear();
+      })
+      .catch((error) => {
+        navigate("/error");
+      });
+    navigate("/");
+      })
+      .catch((err) => {
+        alert(err.message);
+      });
   }
   return (
     <div>
@@ -140,6 +160,12 @@ const Profile = () => {
               <p>{mob}</p>
             </div>
             <div>
+              <button
+                className=" bg-slate-700 m-4 text-white p-1 rounded-xl"
+                onClick={handledelete}
+              >
+                Delete user
+              </button>
               <button
                 onClick={handletoggles}
                 className=" bg-slate-600 me-3 text-slate-100 p-1"
