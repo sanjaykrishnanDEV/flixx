@@ -12,15 +12,15 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-
+import { getDatabase, ref, set } from "firebase/database";
+import { database } from "../utils/firebase";
 const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //   useref for email password name
-  const userName = useRef(null);
+
   const email = useRef(null);
   const password = useRef(null);
-  const mobileNumber = useRef(null);
   const [isSigninForm, setisSigninForm] = useState(true);
   const [errMessage, seterrMessage] = useState("");
   const toggleSignInForm = () => {
@@ -39,28 +39,21 @@ const LoginPage = () => {
           email.current.value,
           password.current.value
         )
-          .then((usercredentials) => {
-            const user = usercredentials.user;
-            updateProfile(user, {
-              displayName: userName.current.value,
-            })
-              .then(() => {
-                const { uid, email, displayName } = auth.currentUser;
-                dispatch(
-                  addUser({ uid: uid, email: email, displayName: displayName })
-                );
-              })
-              .catch((error) => {
-                console.log(error.message);
-                seterrMessage(error.message);
-              });
-
-            console.log("success");
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+            const db = getDatabase();
+            //write to database
+            set(ref(db, "userDetails/" + user.uid), {
+              email: email.current.value,
+              password: password.current.value,
+            });
           })
           .catch((err) => {
             console.log(err);
             seterrMessage(err.message);
           });
+        /////
       } else {
         //signin form logic
         signInWithEmailAndPassword(
@@ -84,6 +77,7 @@ const LoginPage = () => {
       return;
     }
   };
+
   return (
     <div className=" h-screen w-screen ">
       <Header />
@@ -99,30 +93,12 @@ const LoginPage = () => {
       </div>
       <form
         onSubmit={(e) => e.preventDefault()}
-        className="text-white absolute  w-1/3 h-fit p-12 m-auto left-0 right-0 top-0 bottom-0 flex flex-col
-         justify-center items-center bg-black bg-opacity-80 rounded-md"
+        className="text-white absolute  sm:w-1/2 md:w-1/3 h-fit p-12 m-auto left-0 right-0 top-0 bottom-0 flex flex-col    justify-center items-center bg-black bg-opacity-80 rounded-md"
       >
         <label className="text-2xl">
           {isSigninForm ? "Sign In" : "Sign Up"}
         </label>
-        {!isSigninForm && (
-          <input
-            ref={userName}
-            type="text"
-            placeholder="Full name 
-"
-            className="w-full p-2 rounded-md  m-2 text-black"
-          />
-        )}
-        {!isSigninForm && (
-          <input
-            ref={mobileNumber}
-            type="number"
-            placeholder="Mobile number 
-"
-            className="w-full p-2 rounded-md  m-2 text-black"
-          />
-        )}
+
         <input
           ref={email}
           type="text"

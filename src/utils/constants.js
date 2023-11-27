@@ -14,3 +14,7 @@ export const API_options = {
 
 
 export const POSTER_PATH = "https://image.tmdb.org/t/p/w200/"
+export const POSTERPATH_MOVDET = "https://image.tmdb.org/t/p/original/"
+
+
+export const API_ai = "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"

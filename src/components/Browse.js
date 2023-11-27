@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
@@ -9,8 +9,13 @@ import useTopRatedMovieFetcher from "../customHooks/useTopRatedFetcher";
 import useAddUpcomingMovie from "../customHooks/useAddUpcomingMovie";
 import useNowPlaying from "../customHooks/useNowplaying";
 import usePopularMoviesFetcher from "../customHooks/usePopularMoviesFetcher";
+import Searcher from "./Searcher";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleSearchView } from "../utils/searchSlice";
 const Browse = () => {
+  const stateValueofSearchBool = useSelector((store) => store.search.showState);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   function handleSignOut() {
     signOut(auth)
       .then(() => {})
@@ -19,6 +24,9 @@ const Browse = () => {
       });
     navigate("/");
   }
+  function handleToggleSearch() {
+    dispatch(toggleSearchView());
+  }
   useNowPlaying();
   usePopularMoviesFetcher();
   useTopRatedMovieFetcher();
@@ -26,20 +34,33 @@ const Browse = () => {
   return (
     <div className="">
       <div
-        className="z-50 bg-transparent bg-opacity-25 p-5  absolute top-0
+        className="z-50 bg-transparent bg-opacity-50 p-5  absolute top-0
        w-[100%]  flex justify-between "
       >
         <Header />
         <p className="font-bold text-4xl text-red-600 ">CINIFY</p>
 
-        <button onClick={handleSignOut} className="text-white me-5 right-0">
-          Signout
-        </button>
+        <div>
+          <button
+            className=" text-white font-bold  rounded-2xl py-2 bg-purple-950 px-8 me-3"
+            onClick={handleToggleSearch}
+          >
+            {!stateValueofSearchBool?"Try Search":"Back to Home"}
+          </button>
+          <button onClick={handleSignOut} className="bg-slate-200 text-black p-2 rounded-2xl me-5 right-0">
+            Signout
+          </button>
+        </div>
       </div>
-      <div className="">
-        <Maincontainer />
-        <Secondarycontainer />
-      </div>
+      {stateValueofSearchBool ? (
+        <Searcher />
+      ) : (
+        <>
+          <Maincontainer />
+          <Secondarycontainer />
+        </>
+      )}
+      <h1 className=" bg-black flex flex-wrap justify-center text-slate-200">Made with ❤ by Sanjay Krishnan</h1>
     </div>
   );
 };
