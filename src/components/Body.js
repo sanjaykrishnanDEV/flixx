@@ -1,3 +1,4 @@
+import Error from "./Error";
 import React from "react";
 import LoginPage from "./LoginPage";
 import Browse from "./Browse";
@@ -17,12 +18,16 @@ const Body = () => {
     },
     {
       path: "/moviedetails/:movieId",
-      element: <MovieDetails title="title"/>,
+      element: <MovieDetails title="title" />,
     },
     {
-      path:"/profile/:uid",
-      element:<Profile/>
-    }
+      path: "/profile/:uid",
+      element: <Profile />,
+    },
+    {
+      path: "/*",
+      element: <Error />,
+    },
   ]);
 
   return (

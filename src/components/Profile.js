@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getDatabase, ref, onValue, remove } from "firebase/database";
 import { child, push, update } from "firebase/database";
-import { signOut } from "firebase/auth";
+import { signOut, deleteUser } from "firebase/auth";
 
 const Profile = () => {
   const [showform, setshowform] = useState(false);
@@ -62,15 +62,15 @@ const Profile = () => {
       .then(() => {
         alert("user deleted");
       })
-      .then(()=>{
-        signOut(auth)
       .then(() => {
-        localStorage.clear();
-      })
-      .catch((error) => {
-        navigate("/error");
-      });
-    navigate("/");
+        signOut(auth)
+          .then(() => {
+            localStorage.clear();
+          })
+          .catch((error) => {
+            navigate("/error");
+          });
+        navigate("/");
       })
       .catch((err) => {
         alert(err.message);
