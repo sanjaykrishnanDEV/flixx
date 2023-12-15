@@ -11,11 +11,13 @@ const Profile = () => {
   const [usernameval, setusernameval] = useState("");
   const [gender, setgender] = useState("");
   const [mob, setmob] = useState("");
+  const[state,setstate] = useState("")
   const [userData, setuserData] = useState({
     email: "",
     username: "",
     gender: "",
     mobileNumber: "",
+    state:"",
   });
   const navigate = useNavigate();
   const id = useParams();
@@ -29,11 +31,13 @@ const Profile = () => {
       setusernameval(data?.username);
       setgender(data?.gender);
       setmob(data?.mobileNumber);
+      setstate(data?.state);
       setuserData({
         email: localStorage.getItem("email"),
         username: data?.username,
         gender: data?.gender,
         mobileNumber: data?.mobileNumber,
+        state:data?.state,
       });
     });
   }, []);
@@ -123,6 +127,19 @@ const Profile = () => {
               onChange={handlechanges}
               name="mobileNumber"
             />
+            <label>State</label>
+            <select
+              className="border-2"
+              onChange={handlechanges}
+              name="state"
+              value={userData.state}
+            >
+              <option>Select state</option>
+              <option>Delhi</option>
+              <option>Gujarat</option>
+              <option>Karnataka</option>
+              <option>Tamilnadu</option>
+            </select>
             <div className="">
               <button
                 className=" bg-slate-700 m-4 text-white p-1 rounded-xl"
@@ -158,6 +175,10 @@ const Profile = () => {
             <div className="flex mb-2">
               <p>MobileNumber:</p>
               <p>{mob}</p>
+            </div>
+            <div className="flex mb-2">
+              <p>state:</p>
+              <p>{state}</p>
             </div>
             <div>
               <button

@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { updateProfile } from "firebase/auth";
 import { addUser } from "../utils/userSlice";
 import { useDispatch } from "react-redux";
+import { Toaster, toast } from "react-hot-toast";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -18,7 +19,6 @@ const LoginPage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   //   useref for email password name
-
   const email = useRef(null);
   const password = useRef(null);
   const [isSigninForm, setisSigninForm] = useState(true);
@@ -29,7 +29,11 @@ const LoginPage = () => {
   const handlevalidation = (e) => {
     e.preventDefault();
     const message = checkValidData(email.current.value, password.current.value);
-    seterrMessage(message);
+    // toast.success('invalid credentials');
+    if(message){
+      toast.error(message)
+      console.log(message)
+    }
     //firebase auth because valid credentials client-side
     if (message === null) {
       if (!isSigninForm) {
@@ -48,12 +52,13 @@ const LoginPage = () => {
               email: email.current.value,
               password: password.current.value,
             });
-            localStorage.setItem("userId",user.uid);
-            localStorage.setItem("email",email.current.value);
+            localStorage.setItem("userId", user.uid);
+            localStorage.setItem("email", email.current.value);
+            toast.success("logging in");
           })
           .catch((err) => {
             console.log(err);
-            seterrMessage(err.message);
+            toast.error(err.message);
           });
         /////
       } else {
@@ -67,12 +72,14 @@ const LoginPage = () => {
             // Signed in
             const user = userCredential.user;
             localStorage.setItem("userId", user.uid);
-            localStorage.setItem("email",email.current.value);
+            localStorage.setItem("email", email.current.value);
+            toast.success("loggin you in")
           })
           .catch((error) => {
             const errorCode = error.code;
             const errorMessage = error.message;
-            seterrMessage(errorCode + "-" + errorMessage);
+            seterrMessage(errorMessage);
+            toast.error(errMessage)
           });
       }
     }
@@ -99,6 +106,7 @@ const LoginPage = () => {
         onSubmit={(e) => e.preventDefault()}
         className="text-white absolute  sm:w-1/2 md:w-1/3 h-fit p-12 m-auto left-0 right-0 top-0 bottom-0 flex flex-col    justify-center items-center bg-black bg-opacity-80 rounded-md"
       >
+        <Toaster />
         <label className="text-2xl">
           {isSigninForm ? "Sign In" : "Sign Up"}
         </label>
@@ -123,7 +131,7 @@ const LoginPage = () => {
         >
           {isSigninForm ? "Sign In ❤" : "Sign Up"}
         </button>
-        <p className=" text-red-600">{errMessage}</p>
+        {/* <p className=" text-red-600">{errMessage}</p> */}
         <div className="flex my-4">
           <p className="mx-2 text-slate-400">
             {isSigninForm ? "New to Netflix?" : "Already Have an account!"}
@@ -132,10 +140,11 @@ const LoginPage = () => {
             {isSigninForm ? "Sign Up" : "Sign In"}
           </p>
         </div>
-        <p className="text-sm text-slate-300">
-          This page is protected by Google reCAPTCHA to ensure you're not a bot.
-          Learn more.
-        </p>
+        <div className="text-white text-sm">
+          <p>Demo credentials</p>
+          <p>Email: test@gmail.com</p>
+          <p>password: Test@123</p>
+        </div>
       </form>
     </div>
   );
