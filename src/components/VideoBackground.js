@@ -11,7 +11,7 @@ const VideoBackground = ({ movieId }) => {
         src={
           "https://www.youtube.com/embed/" +
           trailerFetch +
-          "?autoplay=1&mute=1&controls=1&rel=0&showInfo=0"
+          "?autoplay=1&controls=1&rel=0&showInfo=0"
         }
         frameBorder="0"
         title="YouTube video player"
